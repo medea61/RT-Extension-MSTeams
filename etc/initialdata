@@ -1,0 +1,17 @@
+@Scrips = (
+    {
+        Description    => 'Notify MS Teams of newly created ticket',
+        ScripCondition => 'On Create',
+        ScripAction    => 'Post to MS Teams',
+        Template       => 'Blank',
+        Disabled       => 1,
+    },
+);
+
+@ScripActions = (
+   {
+       Name => 'Post to MS Teams',
+       Description => 'Post info to MS Teams',
+       ExecModule => 'PostToMSTeams',
+   },
+);

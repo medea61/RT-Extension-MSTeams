@@ -1,0 +1,1 @@
+Set($MSTeamsWebhookURL, 'MSTeams-webhook-url') unless $MSTeamsWebhookURL;
