@@ -12,6 +12,7 @@ Works with RT 4.4.2
     perl Makefile.PL
     make
     make install
+    make initdb
 
 May need root permissions
 
@@ -36,62 +37,43 @@ Edit your /opt/rt4/etc/RT_SiteConfig.pm to include the webhook-url. Make sure to
 
     Set($MSTeamsWebhookURL, 'MSTeams-webhook-url');
 
-
 # USE
-Create a Scrip in RT.
+This extension at installation creates automatically a global script
+which you may choose to enable. Otherwise you may also choose to 
+create your own scrip with these settings:
 
 * Condition 'On Create'
-* Action 'User Defined'
+* Action 'Post to MS Teams'
 * Template 'Blank'
-* Applies to: 'Globally'
-* Custom action preparation code:
-```
-    my $text;
-	my $requestor;
-	my $ticket = $self->TicketObj;
-	my $queue = $ticket->QueueObj;
-	my $url = join '',
-	RT->Config->Get('WebPort') == 443 ? 'https' : 'http',
-	'://',
-	RT->Config->Get('WebDomain'),
-	RT->Config->Get('WebPath'),
-	'/Ticket/Display.html?id=',
-	$ticket->Id;
-
-	$requestor = $ticket->RequestorAddresses || 'unknown';
-    $text = sprintf('[&#35;%d](%s) by %s: %s', $ticket->Id, $url, $requestor, $ticket->Subject);
-
-	RT::Extension::MSTeams::Notify(text => $text, id => $ticket->Id, url => $url);
-```
 
 # AUTHORS
 Roman Hochuli
 
-Andrew Wippler
-
-[Maciek] (http://www.gossamer-threads.com/lists/rt/users/128413#128413)
+## Inspired by
+- Andrew Wippler
+- [Maciek] (http://www.gossamer-threads.com/lists/rt/users/128413#128413)
 
 # LICENSE AND COPYRIGHT
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright (c) 2015 Roman Hochuli
+Copyright (c) 2017 Roman Hochuli
 
-    Permission is hereby granted, free of charge, to any person obtaining a
-    copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 

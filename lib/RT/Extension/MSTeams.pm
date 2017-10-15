@@ -31,6 +31,8 @@ Works with RT 4.2.0
 
 =item C<make install>
 
+=item C<make initdb>
+
 May need root permissions
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
