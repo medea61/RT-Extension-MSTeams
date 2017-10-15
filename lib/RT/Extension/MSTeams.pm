@@ -13,7 +13,9 @@ RT-Extension-MSTeams - Integration with Microsoft Teams webhooks
 
 =head1 DESCRIPTION
 
-This module is designed for *Request Tracker 4* integrating with *Microsoft Teams* webhooks. Shamelessly ripped off from RT-Extension-Slack by Andrew Wippler.
+This module is designed for *Request Tracker 4* integrating with 
+*Microsoft Teams* webhooks.
+Shamelessly ripped off from RT-Extension-Slack by Andrew Wippler.
 
 =head1 RT VERSION
 
@@ -69,7 +71,7 @@ or via the web at
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Roman Hochuli
+Copyright (c) 2017 Roman Hochuli
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
