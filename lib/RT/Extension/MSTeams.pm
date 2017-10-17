@@ -111,9 +111,21 @@ sub Notify {
 			{
 				'@context' => 'http://schema.org',
 				'@type' => "ViewAction",
+				name => "Reply to Ticket",
+				target => ["I missed the URL! :-O"]
+			},
+			{
+				'@context' => 'http://schema.org',
+				'@type' => "ViewAction",
+				name => "Comment on Ticket",
+				target => ["I missed the URL! :-O"]
+			},
+			{
+				'@context' => 'http://schema.org',
+				'@type' => "ViewAction",
 				name => "Assign/Modify Ticket",
 				target => ["I missed the URL! :-O"]
-			}
+			}			
 		]
 	};
 
@@ -128,6 +140,16 @@ sub Notify {
 	my $ticketurl = join '',
     	$baseurl,
     	'/Ticket/Display.html?id=',
+    	$args{'id'};
+
+	my $replyurl = join '',
+		$baseurl,
+    	'/Ticket/Update.html?Action=Respond;id=',
+    	$args{'id'};
+
+	my $commenturl = join '',
+		$baseurl,
+    	'/Ticket/Update.html?Action=Comment;id=',
     	$args{'id'};
 
 	my $modifyurl = join '',
