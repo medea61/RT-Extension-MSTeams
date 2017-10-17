@@ -5,7 +5,7 @@ use LWP::UserAgent;
 use JSON; 
 package RT::Extension::MSTeams;
 
-our $VERSION = '1.2';
+our $VERSION = '1.3';
 
 =head1 NAME
 
