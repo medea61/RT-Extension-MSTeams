@@ -15,23 +15,10 @@ sub Prepare {
     my $Ticket = $self->TicketObj;
     my $TicketId = $Ticket->Id;
     my $Transaction = $self->TransactionObj;
-    my $Subject = $Transaction->Subject;
+    my $Subject = $Transaction->Subject || 'no subject given';
     my $Requestor = $Ticket->RequestorAddresses || 'unknown';
 
-    my $text = "";
-
-	my $queue = $Ticket->QueueObj;
-	my $url = join '',
-    	RT->Config->Get('WebPort') == 443 ? 'https' : 'http',
-    	'://',
-    	RT->Config->Get('WebDomain'),
-	    RT->Config->Get('WebPath'),
-    	'/Ticket/Display.html?id=',
-    	$TicketId;
-
-    $text = sprintf('[&#35;%d](%s) by %s: %s', $TicketId, $url, $Requestor, $Subject);
-
-	RT::Extension::MSTeams::Notify(text => $text, id => $TicketId, url => $url);
+    RT::Extension::MSTeams::Notify(id => $TicketId, requestor => $Requestor, subject => $Subject);
 
     return 1;
 }
