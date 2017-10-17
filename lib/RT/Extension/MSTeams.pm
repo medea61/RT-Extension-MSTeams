@@ -5,7 +5,7 @@ use LWP::UserAgent;
 use JSON; 
 package RT::Extension::MSTeams;
 
-our $VERSION = '1.1';
+our $VERSION = '1.2';
 
 =head1 NAME
 
@@ -103,29 +103,66 @@ sub Notify {
 		text => 'I have forgotten to say something!',
 		themeColor => 'EA4300',
 		potentialAction => [{
-			'@context' => 'http://schema.org',
-			'@type' => "ViewAction",
-			name => "View in RT",
-			target => ["I missed the URL! :-O"]
-		}]
+				'@context' => 'http://schema.org',
+				'@type' => "ViewAction",
+				name => "View in RT",
+				target => ["I missed the URL! :-O"]
+			},
+			{
+				'@context' => 'http://schema.org',
+				'@type' => "ViewAction",
+				name => "Assign/Modify Ticket",
+				target => ["I missed the URL! :-O"]
+			}
+		]
 	};
+
+	my $text = "";
+
+	my $baseurl = join '',
+    	RT->Config->Get('WebPort') == 443 ? 'https' : 'http',
+    	'://',
+    	RT->Config->Get('WebDomain'),
+	    RT->Config->Get('WebPath');
+	
+	my $ticketurl = join '',
+    	$baseurl,
+    	'/Ticket/Display.html?id=',
+    	$args{'id'};
+
+	my $modifyurl = join '',
+		$baseurl,
+    	'/Ticket/Modify.html?id=',
+    	$args{'id'};
+
+	$text = sprintf('[&#35;%d](%s) by %s: %s', $args{'id'}, $ticketurl, $args{'requstor'}, $args{'subject'});
+
+
 	my $service_webhook;
 	
 	$RT::Logger->debug('Entering RT::Extension::MSTeams::Notify');
-	$RT::Logger->debug('Text: '. $args{'text'});
-	$RT::Logger->debug('URL: '. $args{'url'});
+	$RT::Logger->debug('Ticket ID: ' . $args{'id'});
+	$RT::Logger->debug('Requestor: ' . $args{'requstor'});
+	$RT::Logger->debug('Subject: '. $args{'subject'});
+	$RT::Logger->debug('Text: '. $text);
+	$RT::Logger->debug('URL: '. $ticketurl);
 	
-	$payload->{'text'} = $args{'text'};
-	$payload->{'potentialAction'}->[0]->{'target'}->[0] = $args{'url'};
+	# prepare payload to be sent to MS Teams
+	$payload->{'text'} = $text;
+	$payload->{'potentialAction'}->[0]->{'target'}->[0] = $ticketurl;
+	$payload->{'potentialAction'}->[1]->{'target'}->[0] = $modifyurl;
 	
 	if (!$payload->{text}) {
 		return;
 	}
 	my $payload_json = JSON::encode_json($payload);
+	$RT::Logger->debug('JSON Payload: '. $payload_json);
+
 
 	$service_webhook = RT->Config->Get('MSTeamsWebhookURL');
-	if (!$service_webhook) {
-		return;
+	if ((!$service_webhook) || ($service_webhook eq 'MSTeams-webhook-url')) {
+		$RT::Logger->error('Missing MS Teams Webhook URL in settings!');
+		return 0;
 	}
 
 	my $ua = LWP::UserAgent->new();

@@ -1,5 +1,9 @@
 Revision history for RT-Extension-MSTeams
 
+1.2 2017-10-15
+- refactored code
+- added "Assign/Modify Ticket"-Button
+
 1.1 2017-10-15
 - added automatic creation of Scrip and ScripAction
 - updated documentation
