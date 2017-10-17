@@ -157,14 +157,14 @@ sub Notify {
     	'/Ticket/Modify.html?id=',
     	$args{'id'};
 
-	$text = sprintf('[&#35;%d](%s) by %s: %s', $args{'id'}, $ticketurl, $args{'requstor'}, $args{'subject'});
+	$text = sprintf('[&#35;%d](%s) by %s: %s', $args{'id'}, $ticketurl, $args{'requestor'}, $args{'subject'});
 
 
 	my $service_webhook;
 	
 	$RT::Logger->debug('Entering RT::Extension::MSTeams::Notify');
 	$RT::Logger->debug('Ticket ID: ' . $args{'id'});
-	$RT::Logger->debug('Requestor: ' . $args{'requstor'});
+	$RT::Logger->debug('Requestor: ' . $args{'requestor'});
 	$RT::Logger->debug('Subject: '. $args{'subject'});
 	$RT::Logger->debug('Text: '. $text);
 	$RT::Logger->debug('URL: '. $ticketurl);
@@ -172,7 +172,9 @@ sub Notify {
 	# prepare payload to be sent to MS Teams
 	$payload->{'text'} = $text;
 	$payload->{'potentialAction'}->[0]->{'target'}->[0] = $ticketurl;
-	$payload->{'potentialAction'}->[1]->{'target'}->[0] = $modifyurl;
+	$payload->{'potentialAction'}->[1]->{'target'}->[0] = $replyurl;
+	$payload->{'potentialAction'}->[2]->{'target'}->[0] = $commenturl;
+	$payload->{'potentialAction'}->[3]->{'target'}->[0] = $modifyurl;
 	
 	if (!$payload->{text}) {
 		return;
